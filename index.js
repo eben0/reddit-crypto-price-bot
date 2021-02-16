@@ -1,4 +1,4 @@
-import Bot from "./src/Bot";
+import PriceBot from "./src/PriceBot";
 
-const bot = new Bot();
-bot.stream();
+const bot = new PriceBot();
+bot.start();

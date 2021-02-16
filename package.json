@@ -13,6 +13,7 @@
     "tabWidth": 4
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "prettier": "^2.2.1",
