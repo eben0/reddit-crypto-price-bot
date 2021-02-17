@@ -4,7 +4,7 @@ export const userAgent = `by u/${botName}`;
 
 export const streamOpts = {
   subreddit:
-    "test+cryptocurrency+dogecoin+bitcoin+btc+bitcoincash+ethereumeth+litecoin+xrp+tronix+cardano+eos+coinbase",
+    "test+cryptocurrency+dogecoin+bitcoin+btc+bitcoincash+ethereum+litecoin+xrp+tronix+cardano+eos+coinbase",
   results: 100,
 };
 
