@@ -47,7 +47,7 @@ class PriceBot extends Bot {
   getSymbol(comment) {
     // first part is the symbol
     let parts = (comment.body || "").split(this.re);
-    return parts[1];
+    return parts[1] && parts[1].trim();
   }
 
   /**
@@ -103,6 +103,7 @@ class PriceBot extends Bot {
   }
 
   start() {
+    this.logger.info("Starting Crypto Price Bot...");
     this.stream.on("item", (c) => this.onComment(c));
     this.store.set("price_bot_start", this.unixTimestamp());
   }

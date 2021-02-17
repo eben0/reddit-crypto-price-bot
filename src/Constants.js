@@ -15,6 +15,8 @@ export const CMC = {
     "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
   listingsDbFile: "db/listings.json",
   pollTime: 300000, // every 5 minutes
+  timezone: "America/Los_Angeles",
+  timezoneShort: "PST"
 };
 
 export const LoggerPaths = {

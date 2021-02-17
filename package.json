@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "price-bot": "bin/price-bot",
-    "cmc-bot": "bin/cmc-bot"
+    "price-bot": "node -r esm bin/price-bot",
+    "cmc-bot": "node -r esm bin/cmc-bot"
   },
   "keywords": [],
   "author": "",
