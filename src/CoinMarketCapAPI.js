@@ -74,8 +74,10 @@ class CoinMarketCapAPI {
           hour: "numeric",
           minute: "numeric",
           second: "numeric",
-          timeZone: "est",
-        }).format(new Date(this.getListings().status.timestamp)) + " EST",
+          timeZone: CMC.timezone,
+        }).format(new Date(this.getListings().status.timestamp)) +
+        " " +
+        CMC.timezoneShort,
     };
 
     if (obj.change > 0) {
