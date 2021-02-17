@@ -1,0 +1,8 @@
+#!/usr/bin/env node -r esm
+
+import dotenv from "dotenv";
+import PriceBot from "../src/PriceBot";
+
+dotenv.config();
+const bot = new PriceBot();
+bot.start();

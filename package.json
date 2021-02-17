@@ -1,0 +1,24 @@
+{
+  "name": "reddit-crypto-price-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "price-bot": "bin/price-bot",
+    "cmc-bot": "bin/cmc-bot"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "prettier": {
+    "tabWidth": 2
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "snoostorm": "^1.5.2",
+    "snoowrap": "^1.22.0",
+    "winston": "^3.3.3"
+  }
+}

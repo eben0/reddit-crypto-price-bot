@@ -1,0 +1,7 @@
+#!/usr/bin/env node -r esm
+import dotenv from "dotenv";
+import CoinMarketCapAPI from "../src/CoinMarketCapAPI";
+
+dotenv.config();
+const cmcBot = new CoinMarketCapAPI();
+cmcBot.poll();
