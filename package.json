@@ -4,20 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "price-bot": "bin/price-bot",
+    "cmc-bot": "bin/cmc-bot"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "prettier": {
-    "tabWidth": 4
+    "tabWidth": 2
   },
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
-    "prettier": "^2.2.1",
     "snoostorm": "^1.5.2",
-    "snoowrap": "^1.22.0"
+    "snoowrap": "^1.22.0",
+    "winston": "^3.3.3"
   }
 }

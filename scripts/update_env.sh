@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-FILE=./env2
-
 function echo_env() {
   env_var=$1
   echo "${env_var}"="${!env_var}"
@@ -12,7 +10,7 @@ function echo_env() {
   echo_env CLIENT_SECRET;
   echo_env REFRESH_TOKEN;
   echo_env CMC_API_KEY;
-} > ${FILE}
+} > .env
 
 
 

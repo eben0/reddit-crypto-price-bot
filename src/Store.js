@@ -4,66 +4,70 @@ const defaultDbFile = "db/store.json";
 const writeSyncTime = 5000;
 
 class Store {
-    constructor(dbFile = defaultDbFile, sync = true) {
-        this.dbFile = dbFile;
-        this.db = this.open();
-        this._writing = false;
-        if (sync) {
-            this.writeSync();
-        }
+  constructor(dbFile = defaultDbFile, sync = true) {
+    this.dbFile = dbFile;
+    this.db = this.open();
+    this._writing = false;
+    if (sync) {
+      this.writeSync();
     }
+  }
 
-    get(key) {
-        return this.db.json[key];
-    }
+  getAll() {
+    return this.db.json;
+  }
 
-    set(key, value) {
-        this.db.json[key] = value;
-    }
+  get(key) {
+    return this.db.json[key];
+  }
 
-    replace(json) {
-        this.db.json = Object.assign({}, json);
-    }
+  set(key, value) {
+    this.db.json[key] = value;
+  }
 
-    raw() {
-        return JSON.stringify(this.db.json, null, 4);
-    }
+  replace(json) {
+    this.db.json = Object.assign({}, json);
+  }
 
-    del(key) {
-        delete this.db.json[key];
-    }
+  raw() {
+    return JSON.stringify(this.db.json);
+  }
 
-    open() {
-        try {
-            let raw = readFileSync(this.dbFile, "utf8");
-            return {
-                _raw: raw,
-                json: JSON.parse(raw),
-            };
-        } catch (err) {
-            console.error(err);
-            return {};
-        }
-    }
+  del(key) {
+    delete this.db.json[key];
+  }
 
-    write() {
-        try {
-            writeFileSync(this.dbFile, this.raw());
-        } catch (err) {
-            console.error(err);
-        }
+  open() {
+    try {
+      let raw = readFileSync(this.dbFile, "utf8");
+      return {
+        _raw: raw,
+        json: JSON.parse(raw),
+      };
+    } catch (err) {
+      console.error(err);
+      return {};
     }
+  }
 
-    // need some race-condition protection
-    writeSync() {
-        setInterval(() => {
-            if (this._writing || this.raw() === this.db._raw) return;
-            this._writing = true;
-            this.write();
-            this.db = this.open();
-            this._writing = false;
-        }, writeSyncTime);
+  write() {
+    try {
+      writeFileSync(this.dbFile, this.raw());
+    } catch (err) {
+      console.error(err);
     }
+  }
+
+  // need some race-condition protection
+  writeSync() {
+    setInterval(() => {
+      if (this._writing || this.raw() === this.db._raw) return;
+      this._writing = true;
+      this.write();
+      this.db = this.open();
+      this._writing = false;
+    }, writeSyncTime);
+  }
 }
 
 export default Store;
