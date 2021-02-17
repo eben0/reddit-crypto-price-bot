@@ -4,6 +4,7 @@ import { Err } from "./Constants";
 import Store from "./Store";
 import CoinMarketCapAPI from "./CoinMarketCapAPI";
 import Template from "./Template";
+import { botName } from "./Constants";
 
 class PriceBot extends Bot {
   constructor() {
@@ -27,7 +28,7 @@ class PriceBot extends Bot {
   canReply(comment) {
     return (
       // checking for bot name so we won't reply to ourselves
-      // comment.author.name !== C.botName &&
+      comment.author.name !== botName &&
       !comment.locked &&
       comment.link_author !== "[deleted]" &&
       comment.subreddit_type === "public" &&
@@ -56,10 +57,10 @@ class PriceBot extends Bot {
    */
   onComment(comment) {
     if (this.canReply(comment)) {
-      this.logger.info(`can reply to ${comment.link_id}`);
+      this.logger.info(`can reply to ${comment.permalink}`);
       let symbol = this.getSymbol(comment);
       if (!symbol) return;
-      this.logger.info(`Fround symbol ${symbol}`);
+      this.logger.info(`Found symbol ${symbol}`);
       let coin = this.cmc.getCoin(symbol);
       if (!coin) return;
 
@@ -68,7 +69,7 @@ class PriceBot extends Bot {
       this.logger.info(
         `Replying to ${comment.author.name}; Symbol: ${symbol}; Price: ${coin.price}`
       );
-      this.logger.info(comment.link_id, {
+      this.logger.info(comment.permalink, {
         author: comment.author.name,
         coin: coin,
         template: tpl,
@@ -76,7 +77,6 @@ class PriceBot extends Bot {
 
       comment
         .reply(tpl)
-        .then(() => comment.upvote())
         .then(() => {
           this.logger.info(
             `Replied to ${comment.author.name}; Symbol: ${symbol}; Price: ${coin.price}`
@@ -84,7 +84,20 @@ class PriceBot extends Bot {
           this.store.set(comment.parent_id, true);
         })
         .catch((err) => {
-          this.logger.error(err);
+          this.logger.error(`Failed to reply ${comment.permalink}`, {
+            err,
+          });
+        });
+
+      comment
+        .upvote()
+        .then(() => {
+          this.logger.info(`Upvoted ${comment.permalink}`);
+        })
+        .catch((err) => {
+          this.logger.error(`Failed to upvote ${comment.permalink}`, {
+            err,
+          });
         });
     }
   }

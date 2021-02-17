@@ -1,4 +1,4 @@
-📊 **{name}** `{symbol}`  **{priceFormatted}** ({changeIcon}{change})
+📊 **{name}** `{symbol}`  **{priceFormatted}** ({changeIcon}{changeFormatted})
 
 ^(📆) **^(Last Updated)**  ^({date})
 

@@ -61,7 +61,7 @@ class Store {
   // need some race-condition protection
   writeSync() {
     setInterval(() => {
-      if (this._writing || this.raw() === this.db._raw) return;
+      if (this._writing) return;
       this._writing = true;
       this.write();
       this.db = this.open();

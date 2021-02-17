@@ -35,7 +35,7 @@ class CoinMarketCapAPI {
         this.logger.info("Storing results...");
         this.store.replace(response.data);
         this.store.write();
-        this.logger.info("Done.\n");
+        this.logger.info("Done.");
       })
       .catch((err) => {
         this.logger.error(`API call error: ${err.static || err.message}`);
@@ -63,9 +63,10 @@ class CoinMarketCapAPI {
         maximumSignificantDigits: 8,
       }).format(coin.quote.USD.price),
       change: coin.quote.USD.percent_change_1h,
+      changeFormatted: coin.quote.USD.percent_change_1h.toFixed(2) + "%",
       changeIcon: "",
       bull: coin.quote.USD.percent_change_1h > 0,
-      date2:
+      date:
         new Intl.DateTimeFormat("en-US", {
           year: "numeric",
           month: "numeric",
@@ -74,7 +75,7 @@ class CoinMarketCapAPI {
           minute: "numeric",
           second: "numeric",
           timeZone: "est",
-        }).format(new Date(this.getListings().status.timestamp)) + " (EST)",
+        }).format(new Date(this.getListings().status.timestamp)) + " EST",
     };
 
     if (obj.change > 0) {

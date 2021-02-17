@@ -3,7 +3,8 @@ export const botName = "crypto-price-bot";
 export const userAgent = `by u/${botName}`;
 
 export const streamOpts = {
-  subreddit: "dogecoin",
+  subreddit:
+    "test+cryptocurrency+dogecoin+bitcoin+btc+bitcoincash+ethereumeth+litecoin+xrp+tronix+cardano+eos+coinbase",
   results: 100,
 };
 
