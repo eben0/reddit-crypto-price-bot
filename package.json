@@ -1,11 +1,12 @@
 {
   "name": "reddit-crypto-price-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "reddit bot that replies with cryptocurrency price",
   "main": "index.js",
   "scripts": {
-    "price-bot": "node -r esm bin/price-bot",
-    "cmc-bot": "node -r esm bin/cmc-bot"
+    "price-bot": "node lib/bin/price-bot",
+    "cmc-bot": "node lib/bin/cmc-bot",
+    "build": "babel src -d lib"
   },
   "keywords": [],
   "author": "",
@@ -13,12 +14,19 @@
   "prettier": {
     "tabWidth": 2
   },
+  "babel": {
+    "presets": ["@babel/preset-env"]
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
-    "esm": "^3.2.25",
     "snoostorm": "^1.5.2",
     "snoowrap": "^1.22.0",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.16",
+    "@babel/core": "^7.12.16",
+    "@babel/preset-env": "^7.12.16"
   }
 }
