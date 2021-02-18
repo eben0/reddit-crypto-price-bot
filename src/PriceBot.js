@@ -1,10 +1,10 @@
 // src
 import Bot from "./Bot";
-import { badBotText, Err, goodBotText } from "./Constants";
+import { Err, goodBotText } from "./Constants";
 import Store from "./Store";
 import CoinMarketCapAPI from "./CoinMarketCapAPI";
 import Template from "./Template";
-import { botName, GoodBadBotPattern } from "./Constants";
+import { GoodBadBotPattern } from "./Constants";
 import { randomInt, logUnhandledRejection, unixTimestamp } from "./Tools";
 
 class PriceBot extends Bot {
@@ -59,6 +59,7 @@ class PriceBot extends Bot {
    * @param {_Comment} comment
    */
   onComment(comment) {
+    if (typeof comment === "string") return;
     this.logger.debug(`comment event`, {
       subreddit: comment.subreddit,
     });
@@ -118,10 +119,7 @@ class PriceBot extends Bot {
       .getComment(comment.parent_id)
       .fetch()
       .then((parentComment) => {
-        if (
-          parentComment.author.id === this.client.me.id &&
-          comment.score < 1
-        ) {
+        if (parentComment.author.id === this.me.id && comment.score < 1) {
           this.logger.debug(
             "low score - deleting comment",
             parentComment.permalink

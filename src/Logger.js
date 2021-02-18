@@ -8,7 +8,7 @@ class Logger {
     const loggerPath = process.env.LOGGER_PATH || "logs";
     const { combine, timestamp, label, json } = format;
     const logger = createLogger({
-      level: process.env.LOG_LEVEL || "info",
+      level: process.env.LOG_LEVEL,
       format: combine(label({ label: _label }), timestamp(), json()),
       transports: [
         new transports.File({

@@ -10,7 +10,7 @@ export function unixTimestamp() {
 
 export function logUnhandledRejection(logger) {
   process.on("unhandledRejection", (error) => {
-    logger.error({ error });
+    logger.error(error.stack ? error.stack : error.message, { error });
   });
 }
 

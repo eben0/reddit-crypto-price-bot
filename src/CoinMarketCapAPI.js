@@ -48,7 +48,7 @@ class CoinMarketCapAPI {
         this.store.write();
       })
       .catch((err) => {
-        this.logger.error(`API call error: ${err.static || err.message}`);
+        this.logger.error(`API call error: ${err.stack || err.message}`);
       });
   }
 
