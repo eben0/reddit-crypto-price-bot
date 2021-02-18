@@ -39,7 +39,7 @@ class Store {
   }
 
   open() {
-    this.logger.info(`reading ${this.dbFile}`);
+    this.logger.debug(`reading ${this.dbFile}`);
     try {
       let raw = readFileSync(this.dbFile, "utf8");
       return {
@@ -54,12 +54,12 @@ class Store {
 
   write() {
     if (this._writing) {
-      this.logger.info(
+      this.logger.debug(
         `another process writing, skipping. File: ${this.dbFile}`
       );
       return false;
     }
-    this.logger.info(`writing ${this.dbFile}`);
+    this.logger.debug(`writing ${this.dbFile}`);
     try {
       writeFileSync(this.dbFile, this.raw());
     } catch (err) {

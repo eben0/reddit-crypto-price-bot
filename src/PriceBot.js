@@ -58,7 +58,9 @@ class PriceBot extends Bot {
    * @param {_Comment} comment
    */
   onComment(comment) {
-    this.logger.info(`comment event ${comment.subreddit}`);
+    this.logger.debug(`comment event`, {
+      subreddit: comment.subreddit,
+    });
     if (this.canReply(comment)) {
       this.logger.info(`can reply to ${comment.permalink}`);
       let symbol = this.getSymbol(comment);
