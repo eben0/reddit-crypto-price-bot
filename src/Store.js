@@ -1,10 +1,11 @@
 import { readFileSync, writeFileSync } from "fs";
-
-const defaultDbFile = "db/store.json";
-const writeSyncTime = 5000;
+import { defaultDbFile, writeSyncTime } from "./Constants";
+import Logger from "./Logger";
+import { wait } from "./Tools";
 
 class Store {
   constructor(dbFile = defaultDbFile, sync = true) {
+    this.logger = Logger.create(this.constructor.name);
     this.dbFile = dbFile;
     this.db = this.open();
     this._writing = false;
@@ -38,6 +39,7 @@ class Store {
   }
 
   open() {
+    this.logger.info(`reading ${this.dbFile}`);
     try {
       let raw = readFileSync(this.dbFile, "utf8");
       return {
@@ -45,28 +47,41 @@ class Store {
         json: JSON.parse(raw),
       };
     } catch (err) {
-      console.error(err);
+      this.logger.error({ err });
       return {};
     }
   }
 
   write() {
+    if (this._writing) {
+      this.logger.info(
+        `another process writing, skipping. File: ${this.dbFile}`
+      );
+      return false;
+    }
+    this.logger.info(`writing ${this.dbFile}`);
     try {
       writeFileSync(this.dbFile, this.raw());
     } catch (err) {
-      console.error(err);
+      this.logger.error({ err });
+      return false;
     }
+    return true;
+  }
+
+  writeOpen() {
+    let success = this.write();
+    if (success) {
+      this.db = this.open();
+    }
+    return Promise.resolve(success);
   }
 
   // need some race-condition protection
   writeSync() {
-    setInterval(() => {
-      if (this._writing) return;
-      this._writing = true;
-      this.write();
-      this.db = this.open();
-      this._writing = false;
-    }, writeSyncTime);
+    return this.writeOpen()
+      .then(() => wait(writeSyncTime))
+      .then(() => this.writeSync());
   }
 }
 

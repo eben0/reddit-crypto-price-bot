@@ -5,6 +5,7 @@ import Store from "./Store";
 import CoinMarketCapAPI from "./CoinMarketCapAPI";
 import Template from "./Template";
 import { botName } from "./Constants";
+import { logUnhandledRejection, unixTimestamp } from "./Tools";
 
 class PriceBot extends Bot {
   constructor() {
@@ -56,6 +57,7 @@ class PriceBot extends Bot {
    * @param {_Comment} comment
    */
   onComment(comment) {
+    this.logger.info(`comment event ${comment.subreddit}`);
     if (this.canReply(comment)) {
       this.logger.info(`can reply to ${comment.permalink}`);
       let symbol = this.getSymbol(comment);
@@ -105,7 +107,8 @@ class PriceBot extends Bot {
   start() {
     this.logger.info("Starting Crypto Price Bot...");
     this.stream.on("item", (c) => this.onComment(c));
-    this.store.set("price_bot_start", this.unixTimestamp());
+    this.store.set("price_bot_start", unixTimestamp());
+    logUnhandledRejection(this.logger);
   }
 }
 

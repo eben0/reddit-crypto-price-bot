@@ -27,10 +27,6 @@ class Bot {
   newCommentStream() {
     return new CommentStream(this.client, C.streamOpts);
   }
-
-  unixTimestamp() {
-    return Math.floor(Date.now() / 1000);
-  }
 }
 
 export default Bot;

@@ -3,6 +3,7 @@ import Store from "./Store";
 
 import { CMC } from "./Constants";
 import Logger from "./Logger";
+import { logUnhandledRejection, wait } from "./Tools";
 
 class CoinMarketCapAPI {
   constructor() {
@@ -25,17 +26,26 @@ class CoinMarketCapAPI {
 
   fetchListings() {
     this.logger.info("Fetching results...");
-    axios
+    return axios
       .get(CMC.listingsUri, {
         headers: {
           "X-CMC_PRO_API_KEY": process.env.CMC_API_KEY,
         },
       })
       .then((response) => {
-        this.logger.info("Storing results...");
-        this.store.replace(response.data);
+        let res = response.data || {
+          status: { error_code: 1, error_message: "error fetching results." },
+        };
+        if (res.status.error_code > 0) {
+          return Promise.reject({
+            error_code: res.status.error_code,
+            error_message: res.status.error_message,
+          });
+        }
+
+        this.logger.info(`storing ${res.data.length} entries...`);
+        this.store.replace(res);
         this.store.write();
-        this.logger.info("Done.");
       })
       .catch((err) => {
         this.logger.error(`API call error: ${err.static || err.message}`);
@@ -90,12 +100,9 @@ class CoinMarketCapAPI {
   }
 
   poll() {
-    this.logger.info("Polling...");
-    this.fetchListings();
-    setInterval(() => {
-      this.logger.info("Polling...");
-      this.fetchListings();
-    }, CMC.pollTime);
+    this.fetchListings()
+      .then(() => wait(CMC.pollTime))
+      .then(() => this.poll());
   }
 }
 

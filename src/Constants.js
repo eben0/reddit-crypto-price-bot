@@ -16,7 +16,7 @@ export const CMC = {
   listingsDbFile: "db/listings.json",
   pollTime: 300000, // every 5 minutes
   timezone: "America/Los_Angeles",
-  timezoneShort: "PST"
+  timezoneShort: "PST",
 };
 
 export const LoggerPaths = {
@@ -29,3 +29,6 @@ export const replyTemplate = "templates/reply.md";
 export const Err = {
   noListings: "Listings file is empty",
 };
+
+export const defaultDbFile = "db/store.json";
+export const writeSyncTime = 5000;
