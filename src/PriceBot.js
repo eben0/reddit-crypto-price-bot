@@ -5,7 +5,7 @@ import Store from "./Store";
 import CoinMarketCapAPI from "./CoinMarketCapAPI";
 import Template from "./Template";
 import { botName } from "./Constants";
-import { logUnhandledRejection, unixTimestamp } from "./Tools";
+import { randomInt, logUnhandledRejection, unixTimestamp } from "./Tools";
 
 class PriceBot extends Bot {
   constructor() {
@@ -29,6 +29,7 @@ class PriceBot extends Bot {
   canReply(comment) {
     return (
       // checking for bot name so we won't reply to ourselves
+      this.outOf() &&
       comment.author.name !== botName &&
       !comment.locked &&
       comment.link_author !== "[deleted]" &&
@@ -102,6 +103,10 @@ class PriceBot extends Bot {
           });
         });
     }
+  }
+
+  outOf() {
+    return randomInt(0, 2) === 1;
   }
 
   start() {
