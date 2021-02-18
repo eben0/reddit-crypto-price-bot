@@ -165,7 +165,7 @@ class PriceBot extends Bot {
    * @return {Promise}
    */
   reply(comment, message) {
-    return comment.reply(message).catch((err) => () => {
+    return comment.reply(message).catch((err) => {
       this.logger.error(`Failed to reply ${comment.permalink}`, {
         err,
       });
@@ -179,7 +179,7 @@ class PriceBot extends Bot {
    * @return {Promise}
    */
   del(comment) {
-    return comment.delete().catch((err) => () => {
+    return comment.delete().catch((err) => {
       this.logger.error(`Failed to delete ${comment.permalink}`, {
         err,
       });
