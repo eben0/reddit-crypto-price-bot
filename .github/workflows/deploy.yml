@@ -13,6 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: '14'
@@ -24,7 +25,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-
+      - uses: actions/checkout@v2
       # copies the secrets to .env file
       - name: update env
         run: sh scripts/update_env.sh
