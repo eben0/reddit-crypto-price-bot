@@ -8,7 +8,7 @@ export const streamOpts = {
   results: 100,
 };
 
-// export const PATTERN = /(btc|bitcoin|eth|ethereum|doge|dogecoin)\s+price/i;
+export const GoodBadBotPattern = /(good|bad)\s+bot/i;
 
 export const CMC = {
   listingsUri:
@@ -32,3 +32,5 @@ export const Err = {
 
 export const defaultDbFile = "db/store.json";
 export const writeSyncTime = 5000;
+
+export const goodBotText = `Yay! ${botName} is a good boi! ${botName} buys more coins!!!`;

@@ -25,7 +25,7 @@ class CoinMarketCapAPI {
   }
 
   fetchListings() {
-    this.logger.info("Fetching results...");
+    this.logger.debug("Fetching results...");
     return axios
       .get(CMC.listingsUri, {
         headers: {
@@ -43,7 +43,7 @@ class CoinMarketCapAPI {
           });
         }
 
-        this.logger.info(`storing ${res.data.length} entries...`);
+        this.logger.debug(`storing ${res.data.length} entries...`);
         this.store.replace(res);
         this.store.write();
       })

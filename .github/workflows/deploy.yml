@@ -26,7 +26,10 @@ jobs:
 
       # copies the secrets to .env file
       - name: update env
-        run: sh scripts/update_env.sh
+        run: |
+          sh scripts/update_env.sh
+          rm -rf db/*.json
+          rm -rf logs/
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}

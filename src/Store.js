@@ -38,6 +38,12 @@ class Store {
     delete this.db.json[key];
   }
 
+  put(collectionKey, item) {
+    let collection = this.get(collectionKey) || [];
+    collection.push(item);
+    this.set(collectionKey, collection);
+  }
+
   open() {
     this.logger.debug(`reading ${this.dbFile}`);
     try {
