@@ -1,3 +1,5 @@
+# deploy workflow
+
 name: CI
 
 # Controls when the action will run.
@@ -10,7 +12,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: prod
-    needs: build
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
