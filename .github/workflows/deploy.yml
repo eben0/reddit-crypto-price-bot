@@ -17,10 +17,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14'
-      - name: traspile files
-        run: |
-          npm install
-          npm build
+      - name: install packages
+        run: npm install
+      - name: transpile files
+        run: npm run build
 
   deploy:
     runs-on: ubuntu-latest
