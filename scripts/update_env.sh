@@ -1,16 +1,9 @@
-#!/usr/bin/env sh
-
-function echo_env() {
-  env_var=$1
-  echo "${env_var}"="${!env_var}"
-}
-
-{
-  echo_env CLIENT_ID;
-  echo_env CLIENT_SECRET;
-  echo_env REFRESH_TOKEN;
-  echo_env CMC_API_KEY;
-} > .env
-
-
-
+#!/usr/bin/env bash
+FILE=.env
+cat /dev/null > $FILE
+echo "CLIENT_ID=${CLIENT_ID}" >> $FILE
+echo "CLIENT_SECRET=${CLIENT_SECRET}" >> $FILE
+echo "REFRESH_TOKEN=${REFRESH_TOKEN}" >> $FILE
+echo "CMC_API_KEY=${CMC_API_KEY}" >> $FILE
+echo "LOGGER_PATH=${LOGGER_PATH}" >> $FILE
+echo "NODE_ENV=${NODE_ENV}" >> $FILE

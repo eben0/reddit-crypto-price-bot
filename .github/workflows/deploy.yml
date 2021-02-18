@@ -29,6 +29,13 @@ jobs:
       # copies the secrets to .env file
       - name: update env
         run: sh scripts/update_env.sh
+        env:
+          CLIENT_ID=${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN=${{ secrets.REFRESH_TOKEN }}
+          CMC_API_KEY=${{ secrets.CMC_API_KEY }}
+          LOGGER_PATH=${{ secrets.LOGGER_PATH }}
+          NODE_ENV=production
 
       # deploys to server
       - name: deploys files
