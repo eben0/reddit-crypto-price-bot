@@ -1,0 +1,40 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run.
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: traspile files
+        run: |
+          npm install
+          npm build
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      # copies the secrets to .env file
+      - name: update env
+        run: sh scripts/update_env.sh
+
+      # deploys to server
+      - name: deploys files
+        uses: easingthemes/ssh-deploy@v2.1.5
+          env:
+            SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+            ARGS: "-rltgoDzvO"
+            SOURCE: "lib/"
+            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+            REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+            REMOTE_USER: ${{ secrets.REMOTE_USER }}
+            TARGET: ${{ secrets.REMOTE_TARGET }}
+
