@@ -24,6 +24,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    environment: prod
+    needs: build
     steps:
       - uses: actions/checkout@v2
       # copies the secrets to .env file
