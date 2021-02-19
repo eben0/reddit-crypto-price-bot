@@ -1,10 +1,20 @@
 import { readFileSync, writeFileSync } from "fs";
 import { defaultDbFile, writeSyncTime } from "./Constants";
-import Logger from "./Logger";
+import Logger, { WinstonLogger } from "./Logger";
 import { wait } from "./Tools";
 
+declare interface StoreOptions {
+  json?: object;
+  _raw?: string;
+}
+
 class Store {
-  constructor(dbFile = defaultDbFile, sync = true) {
+  private logger: WinstonLogger;
+  protected dbFile: string;
+  protected db: StoreOptions;
+  private readonly _writing: boolean;
+
+  constructor(dbFile: string = defaultDbFile, sync: boolean = true) {
     this.logger = Logger.create(this.constructor.name);
     this.dbFile = dbFile;
     this.db = this.open();
@@ -14,11 +24,11 @@ class Store {
     }
   }
 
-  getAll() {
+  getAll(): object {
     return this.db.json;
   }
 
-  get(key) {
+  get(key): any {
     return this.db.json[key];
   }
 
@@ -30,7 +40,7 @@ class Store {
     this.db.json = Object.assign({}, json);
   }
 
-  raw() {
+  raw(): string {
     return JSON.stringify(this.db.json);
   }
 
@@ -44,7 +54,7 @@ class Store {
     this.set(collectionKey, collection);
   }
 
-  open() {
+  open(): StoreOptions {
     this.logger.debug(`reading ${this.dbFile}`);
     try {
       let raw = readFileSync(this.dbFile, "utf8");
@@ -58,7 +68,7 @@ class Store {
     }
   }
 
-  write() {
+  write(): boolean {
     if (this._writing) {
       this.logger.debug(
         `another process writing, skipping. File: ${this.dbFile}`
@@ -75,7 +85,7 @@ class Store {
     return true;
   }
 
-  writeOpen() {
+  writeOpen(): Promise<boolean> {
     let success = this.write();
     if (success) {
       this.db = this.open();

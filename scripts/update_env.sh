@@ -8,3 +8,10 @@ echo "CMC_API_KEY=${CMC_API_KEY}" >> $FILE
 echo "LOGGER_PATH=${LOGGER_PATH}" >> $FILE
 echo "NODE_ENV=${NODE_ENV}" >> $FILE
 echo `date +"%s"` > .timestamp
+mkdir -p dist/
+cp $FILE dist/
+
+if [ "$CI" ]; then
+  rm -rf db/*.json
+  rm -rf logs/
+fi
