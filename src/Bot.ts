@@ -21,6 +21,7 @@ class Bot {
     this.client = this.newSnoowrap();
     this.stream = this.newCommentStream();
     this.store = new Store();
+    this.items = new Set<string>();
   }
 
   newSnoowrap(): Snoowrap {
