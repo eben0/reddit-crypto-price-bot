@@ -1,5 +1,5 @@
 // modules
-import { RedditUser, ReplyableContent } from "snoowrap";
+import { ReplyableContent } from "snoowrap";
 import { Comment } from "snoowrap/dist/objects";
 
 // src
@@ -15,7 +15,6 @@ class PriceBot extends Bot {
   private listings: CmcResponse;
   public re: RegExp;
   private template: Template;
-  private me: RedditUser;
 
   constructor() {
     super();
@@ -28,7 +27,6 @@ class PriceBot extends Bot {
     }
     this.re = this.cmc.buildRegex();
     this.template = new Template();
-    this.me = this.client.getMe();
   }
 
   /**
@@ -204,8 +202,9 @@ class PriceBot extends Bot {
 
   start() {
     this.logger.info("Starting Crypto Price Bot...");
-    this.stream.on("item", (c) => this.onComment(c));
-    this.stream.on("error", (e) => this.onError(e));
+    const stream = this.newCommentStream();
+    stream.on("item", (c) => this.onComment(c));
+    stream.on("error", (e) => this.onError(e));
     this.store.set("price_bot_start", unixTimestamp());
     logUnhandledRejection(this.logger);
   }

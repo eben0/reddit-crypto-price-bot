@@ -1,5 +1,5 @@
 // modules
-import Snoowrap, { Comment, Listing } from "snoowrap";
+import Snoowrap, { Comment, Listing, RedditUser } from "snoowrap";
 import EventEmitter from "events";
 
 // src
@@ -14,12 +14,11 @@ class Bot {
   protected client: Snoowrap;
   protected store: Store;
   protected items: Set<string>;
-  protected stream: EventEmitter;
+  protected me: RedditUser;
 
   constructor() {
     this.logger = Logger.create(this.constructor.name);
     this.client = this.newSnoowrap();
-    this.stream = this.newCommentStream();
     this.store = new Store();
     this.items = new Set<string>();
   }
@@ -56,9 +55,17 @@ class Bot {
       });
   }
 
+  fetchMe() {
+    return this.client
+      .getMe()
+      .fetch()
+      .then((user: RedditUser) => (this.me = user));
+  }
+
   newCommentStream() {
     const emitter: EventEmitter = new EventEmitter();
-    this.poll(emitter)
+    this.fetchMe()
+      .then(() => this.poll(emitter))
       .then(() => wait(options.pollTime))
       .then(() => this.poll(emitter));
     return emitter;
