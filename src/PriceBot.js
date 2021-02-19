@@ -31,7 +31,7 @@ class PriceBot extends Bot {
     return (
       this.outOf() &&
       !(this.store.get("unsubscribe") || []).includes(comment.author.id) &&
-      comment.author.id !== this.client.me.id &&
+      comment.author.id !== this.me.id &&
       !comment.locked &&
       comment.link_author !== "[deleted]" &&
       comment.subreddit_type === "public" &&
