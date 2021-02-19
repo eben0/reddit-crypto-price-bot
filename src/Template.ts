@@ -1,8 +1,10 @@
 import { readFileSync } from "fs";
 import { replyTemplate } from "./Constants";
-import Logger from "./Logger";
+import Logger, { WinstonLogger } from "./Logger";
 
 class Template {
+  private logger: WinstonLogger;
+  private tpl: string;
   constructor() {
     this.logger = Logger.create(this.constructor.name);
     this.tpl = this.open();

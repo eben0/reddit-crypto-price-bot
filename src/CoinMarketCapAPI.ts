@@ -1,17 +1,42 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Store from "./Store";
 
 import { CMC } from "./Constants";
-import Logger from "./Logger";
-import { logUnhandledRejection, wait } from "./Tools";
+import Logger, { WinstonLogger } from "./Logger";
+import { wait } from "./Tools";
+
+export declare interface CmcResponseStatus {
+  error_code?: number;
+  error_message?: string;
+  timestamp?: number;
+}
+
+export declare interface CmcResponseData {
+  name?: string;
+  slug?: string;
+  symbol?: string;
+  quote?: { USD: { price: number; percent_change_1h: number } };
+}
+
+export declare interface CmcResponse {
+  status?: CmcResponseStatus;
+  data?: CmcResponseData[];
+}
+
+export declare interface CmcAxiosResponse extends AxiosResponse {
+  data: { status?: CmcResponseStatus; data?: CmcResponseData[] };
+}
 
 class CoinMarketCapAPI {
+  logger: WinstonLogger;
+  store: Store;
+
   constructor() {
     this.logger = Logger.create(this.constructor.name);
     this.store = new Store(CMC.listingsDbFile, false);
   }
 
-  getListings() {
+  getListings(): CmcResponse {
     return this.store.getAll();
   }
 
@@ -24,7 +49,7 @@ class CoinMarketCapAPI {
     return new RegExp(`(${pattern})\\s+price`, "i");
   }
 
-  fetchListings() {
+  fetchListings(): Promise<CmcResponse> {
     this.logger.debug("Fetching results...");
     return axios
       .get(CMC.listingsUri, {
@@ -32,10 +57,12 @@ class CoinMarketCapAPI {
           "X-CMC_PRO_API_KEY": process.env.CMC_API_KEY,
         },
       })
-      .then((response) => {
-        let res = response.data || {
+      .then((response: CmcAxiosResponse) => {
+        let fallbackRes: CmcResponse = {
           status: { error_code: 1, error_message: "error fetching results." },
+          data: [],
         };
+        let res: CmcResponse = response.data || fallbackRes;
         if (res.status.error_code > 0) {
           return Promise.reject({
             error_code: res.status.error_code,
@@ -46,9 +73,11 @@ class CoinMarketCapAPI {
         this.logger.debug(`storing ${res.data.length} entries...`);
         this.store.replace(res);
         this.store.write();
+        return res;
       })
       .catch((err) => {
         this.logger.error(`API call error: ${err.stack || err.message}`);
+        return err;
       });
   }
 
@@ -99,10 +128,10 @@ class CoinMarketCapAPI {
     return obj;
   }
 
-  poll() {
+  start() {
     this.fetchListings()
       .then(() => wait(CMC.pollTime))
-      .then(() => this.poll());
+      .then(() => this.start());
   }
 }
 

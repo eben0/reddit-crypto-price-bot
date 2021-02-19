@@ -1,11 +1,19 @@
+import { ListingOptions } from "snoowrap/dist/objects";
+
+export interface Options extends ListingOptions {
+  pollTime?: number;
+  subreddit?: string;
+}
+
 export const botName = "crypto-price-bot";
 
 export const userAgent = `by u/${botName}`;
 
-export const streamOpts = {
+export const options: Options = {
   subreddit:
     "test+cryptocurrency+dogecoin+bitcoin+btc+bitcoincash+ethereum+litecoin+xrp+tronix+cardano+eos+coinbase",
-  results: 100,
+  limit: 100,
+  pollTime: 60000,
 };
 
 export const GoodBadBotPattern = /(good|bad)\s+bot/i;

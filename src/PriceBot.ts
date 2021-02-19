@@ -1,13 +1,22 @@
+// modules
+import { RedditUser, ReplyableContent } from "snoowrap";
+import { Comment } from "snoowrap/dist/objects";
+
 // src
 import Bot from "./Bot";
-import { Err, goodBotText } from "./Constants";
+import { Err, goodBotText, GoodBadBotPattern } from "./Constants";
 import Store from "./Store";
-import CoinMarketCapAPI from "./CoinMarketCapAPI";
+import CoinMarketCapAPI, { CmcResponse } from "./CoinMarketCapAPI";
 import Template from "./Template";
-import { GoodBadBotPattern } from "./Constants";
 import { randomInt, logUnhandledRejection, unixTimestamp } from "./Tools";
 
 class PriceBot extends Bot {
+  private cmc: CoinMarketCapAPI;
+  private listings: CmcResponse;
+  public re: RegExp;
+  private template: Template;
+  private me: RedditUser;
+
   constructor() {
     super();
     this.store = new Store();
@@ -25,9 +34,8 @@ class PriceBot extends Bot {
   /**
    *
    * checks if we can reply
-   * @param {_Comment} comment
    */
-  canSummon(comment) {
+  canSummon(comment: Comment | any) {
     return (
       this.outOf() &&
       !(this.store.get("unsubscribe") || []).includes(comment.author.id) &&
@@ -45,7 +53,7 @@ class PriceBot extends Bot {
   /**
    *
    * gets symbol from comment body
-   * @param {_Comment} comment
+   * @param comment
    */
   getSymbol(comment) {
     // first part is the symbol
@@ -56,7 +64,7 @@ class PriceBot extends Bot {
   /**
    *
    * CommentStream on item callback
-   * @param {_Comment} comment
+   * @param comment
    */
   onComment(comment) {
     if (typeof comment === "string") return;
@@ -69,9 +77,10 @@ class PriceBot extends Bot {
   }
 
   /**
-   * @param {_Comment} comment
+   *
+   * @param comment
    */
-  onPriceComment(comment) {
+  onPriceComment(comment: Comment) {
     if (this.canSummon(comment)) {
       this.logger.info(`can reply to ${comment.permalink}`);
       let symbol = this.getSymbol(comment);
@@ -112,9 +121,10 @@ class PriceBot extends Bot {
   }
 
   /**
-   * @param {_Comment} comment
+   *
+   * @param comment
    */
-  onDownVoteComment(comment) {
+  onDownVoteComment(comment: Comment) {
     this.client
       .getComment(comment.parent_id)
       .fetch()
@@ -131,15 +141,16 @@ class PriceBot extends Bot {
   }
 
   /**
-   * @param {_Comment} comment
+   *
+   * @param comment
    */
-  onGoodBadBotComment(comment) {
+  onGoodBadBotComment(comment: Comment) {
     if (GoodBadBotPattern.test(comment.body)) {
       this.client
         .getComment(comment.parent_id)
         .fetch()
         .then((parentComment) => {
-          if (parentComment.author.id === this.client.me.id) {
+          if (parentComment.author.id === this.me.id) {
             let bodyLower = comment.body.toLowerCase();
             if (bodyLower.includes("good bot")) {
               this.reply(comment, goodBotText);
@@ -158,11 +169,10 @@ class PriceBot extends Bot {
 
   /**
    *
-   * @param {_Comment} comment
+   * @param comment
    * @param message
-   * @return {Promise}
    */
-  reply(comment, message) {
+  reply(comment: Comment, message: string): Promise<ReplyableContent<Comment>> {
     return comment.reply(message).catch((err) => {
       this.logger.error(`Failed to reply ${comment.permalink}`, {
         err,
@@ -173,10 +183,9 @@ class PriceBot extends Bot {
 
   /**
    *
-   * @param {_Comment} comment
-   * @return {Promise}
+   * @param {Comment} comment
    */
-  del(comment) {
+  del(comment: Comment): Promise<Comment> {
     return comment.delete().catch((err) => {
       this.logger.error(`Failed to delete ${comment.permalink}`, {
         err,
@@ -185,13 +194,18 @@ class PriceBot extends Bot {
     });
   }
 
-  outOf() {
+  outOf(): boolean {
     return randomInt(0, 2) === 1;
+  }
+
+  onError(error: Error) {
+    this.logger.error(error.stack || error.message, { error });
   }
 
   start() {
     this.logger.info("Starting Crypto Price Bot...");
     this.stream.on("item", (c) => this.onComment(c));
+    this.stream.on("error", (e) => this.onError(e));
     this.store.set("price_bot_start", unixTimestamp());
     logUnhandledRejection(this.logger);
   }
