@@ -10,11 +10,11 @@ class Template {
     this.tpl = this.open();
   }
 
-  render(args) {
+  render(args): string {
     return this.tpl.replace(/{(.*?)}/g, (match, p1) => args[p1]);
   }
 
-  open() {
+  open(): string {
     try {
       return readFileSync(replyTemplate, "utf8");
     } catch (err) {
