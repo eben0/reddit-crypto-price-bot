@@ -14,7 +14,6 @@ class Bot {
   protected client: Snoowrap;
   protected store: Store;
   protected items: Set<string>;
-  protected me: RedditUser;
 
   constructor() {
     this.logger = Logger.create(this.constructor.name);
@@ -52,22 +51,13 @@ class Bot {
       .catch((error) => {
         emitter.emit("error", error);
         return error;
-      });
-  }
-
-  fetchMe() {
-    return this.client
-      .getMe()
-      .fetch()
-      .then((user: RedditUser) => (this.me = user));
+      })
+      .finally(() => wait(options.pollTime).then(() => this.poll(emitter)));
   }
 
   newCommentStream() {
     const emitter: EventEmitter = new EventEmitter();
-    this.fetchMe()
-      .then(() => this.poll(emitter))
-      .then(() => wait(options.pollTime))
-      .then(() => this.poll(emitter));
+    this.poll(emitter);
     return emitter;
   }
 }

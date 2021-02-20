@@ -128,10 +128,15 @@ class CoinMarketCapAPI {
     return obj;
   }
 
-  start() {
+  poll() {
     this.fetchListings()
       .then(() => wait(CMC.pollTime))
-      .then(() => this.start());
+      .finally(() => this.poll());
+  }
+
+  start() {
+    this.logger.info("Starting CMC...");
+    this.poll();
   }
 }
 

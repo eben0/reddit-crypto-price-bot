@@ -4,7 +4,7 @@ import { Comment } from "snoowrap/dist/objects";
 
 // src
 import Bot from "./Bot";
-import { Err, goodBotText, GoodBadBotPattern } from "./Constants";
+import { Err, goodBotText, GoodBadBotPattern, botName } from "./Constants";
 import Store from "./Store";
 import CoinMarketCapAPI, { CmcResponse } from "./CoinMarketCapAPI";
 import Template from "./Template";
@@ -37,7 +37,7 @@ class PriceBot extends Bot {
     return (
       this.outOf() &&
       !(this.store.get("unsubscribe") || []).includes(comment.author.id) &&
-      comment.author.id !== this.me.id &&
+      comment.author.name !== botName &&
       !comment.locked &&
       comment.link_author !== "[deleted]" &&
       comment.subreddit_type === "public" &&
@@ -127,7 +127,7 @@ class PriceBot extends Bot {
       .getComment(comment.parent_id)
       .fetch()
       .then((parentComment) => {
-        if (parentComment.author.id === this.me.id && comment.score < 1) {
+        if (parentComment.author.name === botName && comment.score < 1) {
           this.logger.debug(
             "low score - deleting comment",
             parentComment.permalink
@@ -148,7 +148,7 @@ class PriceBot extends Bot {
         .getComment(comment.parent_id)
         .fetch()
         .then((parentComment) => {
-          if (parentComment.author.id === this.me.id) {
+          if (parentComment.author.name === botName) {
             let bodyLower = comment.body.toLowerCase();
             if (bodyLower.includes("good bot")) {
               this.reply(comment, goodBotText);
