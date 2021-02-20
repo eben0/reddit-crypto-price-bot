@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-import PriceBot from "./src/PriceBot";
-import CoinMarketCapAPI from "./src/CoinMarketCapAPI";
+import App from "./src/App";
 
-dotenv.config();
-new CoinMarketCapAPI().start();
-new PriceBot().start();
+App.start();

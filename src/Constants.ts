@@ -6,9 +6,11 @@ export interface Options extends ListingOptions {
   subreddit?: string;
 }
 
+export const version = process.env.VERSION || "alpha-0.0.1";
+export const author = "/u/eben0";
 export const botName = "crypto-price-bot";
 
-export const userAgent = `by u/${botName}`;
+export const userAgent = `${botName}:${version} (by u/${author})`;
 
 const subreddits = [
   // "cryptocurrency",
