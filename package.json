@@ -17,6 +17,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
+    "lodash.merge": "^4.6.2",
     "snoowrap": "^1.22.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0"

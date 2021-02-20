@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from "fs";
+import merge from "lodash.merge";
 import { defaultDbFile, writeSyncTime } from "./Constants";
 import Logger, { WinstonLogger } from "./Logger";
 import { wait } from "./Tools";
@@ -37,7 +38,7 @@ class Store {
   }
 
   replace(json) {
-    this.db.json = Object.assign({}, json);
+    this.db.json = merge({}, json);
   }
 
   raw(): string {

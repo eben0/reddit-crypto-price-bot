@@ -12,7 +12,6 @@ import { randomInt, logUnhandledRejection, unixTimestamp } from "./Tools";
 
 class PriceBot extends Bot {
   private cmc: CoinMarketCapAPI;
-  private listings: CmcResponse;
   public re: RegExp;
   private template: Template;
 
@@ -21,10 +20,6 @@ class PriceBot extends Bot {
     this.store = new Store();
     // we assume the listing were already fetched
     this.cmc = new CoinMarketCapAPI();
-    this.listings = this.cmc.getListings();
-    if (!this.listings.data) {
-      throw new Error(Err.noListings);
-    }
     this.re = this.cmc.buildRegex();
     this.template = new Template();
   }
