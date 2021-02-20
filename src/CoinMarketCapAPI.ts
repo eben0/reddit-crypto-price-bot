@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import Promise from "bluebird";
 import Store from "./Store";
 
 import { CMC } from "./Constants";
@@ -131,7 +132,8 @@ class CoinMarketCapAPI {
   poll() {
     this.fetchListings()
       .then(() => wait(CMC.pollTime))
-      .finally(() => this.poll());
+      .then(() => this.poll())
+      .catch(() => this.poll());
   }
 
   start() {
