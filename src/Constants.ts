@@ -1,4 +1,5 @@
 import { ListingOptions } from "snoowrap/dist/objects";
+import { isProd } from "./Tools";
 
 export interface Options extends ListingOptions {
   pollTime?: number;
@@ -9,9 +10,22 @@ export const botName = "crypto-price-bot";
 
 export const userAgent = `by u/${botName}`;
 
+const subreddits = [
+  // "cryptocurrency",
+  "dogecoin",
+  "bitcoin",
+  // "btc",
+  "bitcoincash",
+  "ethereum",
+  "litecoin",
+  "xrp",
+  "tronix",
+  "eos",
+  // "coinbase",
+];
+
 export const options: Options = {
-  subreddit:
-    "test+cryptocurrency+dogecoin+bitcoin+btc+bitcoincash+ethereum+litecoin+xrp+tronix+cardano+eos+coinbase",
+  subreddit: isProd() ? subreddits.join("+") : "test",
   limit: 100,
   pollTime: 60000,
 };

@@ -93,6 +93,8 @@ class CoinMarketCapAPI {
       return null;
     }
 
+    let maximumSignificantDigits = coin.quote.USD.price > 10 ? 6 : 8;
+
     let obj = {
       name: coin.name,
       symbol: coin.symbol,
@@ -100,7 +102,7 @@ class CoinMarketCapAPI {
       priceFormatted: new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-        maximumSignificantDigits: 8,
+        maximumSignificantDigits,
       }).format(coin.quote.USD.price),
       change: coin.quote.USD.percent_change_1h,
       changeFormatted: coin.quote.USD.percent_change_1h.toFixed(2) + "%",
