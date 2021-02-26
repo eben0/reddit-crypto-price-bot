@@ -42,7 +42,7 @@ class Store {
   }
 
   raw(): string {
-    return JSON.stringify(this.db.json);
+    return JSON.stringify(this.db.json) || "{}";
   }
 
   del(key) {
@@ -53,6 +53,11 @@ class Store {
     let collection = this.get(collectionKey) || [];
     collection.push(item);
     this.set(collectionKey, collection);
+  }
+
+  in(collectionKey, item){
+    let collection = this.get(collectionKey) || [];
+    return collection.includes(item);
   }
 
   open(): StoreOptions {

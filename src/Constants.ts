@@ -1,9 +1,10 @@
-import { ListingOptions } from "snoowrap/dist/objects";
 import { isProd } from "./Tools";
 
-export interface Options extends ListingOptions {
+export interface Filters {
+  size?: number
   pollTime?: number;
-  subreddit?: string;
+  after?: number;
+  subreddits?: string[];
 }
 
 export const version = process.env.VERSION || "alpha-0.0.1";
@@ -12,7 +13,7 @@ export const botName = "crypto-price-bot";
 
 export const userAgent = `${botName}:${version} (by u/${author})`;
 
-const subreddits = [
+export const subreddits = [
   // "cryptocurrency",
   "dogecoin",
   "bitcoin",
@@ -26,10 +27,11 @@ const subreddits = [
   // "coinbase",
 ];
 
-export const options: Options = {
-  subreddit: isProd() ? subreddits.join("+") : "test",
-  limit: 100,
+export const filters: Filters = {
+  size: 25,
   pollTime: 60000,
+  after: 60000 * 60 * 2, // 2 hours
+  subreddits: isProd() ? subreddits : ["test"],
 };
 
 export const GoodBadBotPattern = /(good|bad)\s+bot/i;

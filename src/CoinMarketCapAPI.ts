@@ -51,7 +51,7 @@ class CoinMarketCapAPI {
   }
 
   fetchListings(): Promise<CmcResponse> {
-    this.logger.debug("Fetching results...");
+    this.logger.info("Fetching results...");
     return axios
       .get(CMC.listingsUri, {
         headers: {
@@ -65,10 +65,12 @@ class CoinMarketCapAPI {
         };
         let res: CmcResponse = response.data || fallbackRes;
         if (res.status.error_code > 0) {
-          return Promise.reject({
+          let errObj = {
             error_code: res.status.error_code,
             error_message: res.status.error_message,
-          });
+          };
+          this.logger.error("fetchListings error", {errObj})
+          return Promise.reject(errObj);
         }
 
         this.logger.debug(`storing ${res.data.length} entries...`);
@@ -77,7 +79,7 @@ class CoinMarketCapAPI {
         return res;
       })
       .catch((err) => {
-        this.logger.error(`API call error: ${err.stack || err.message}`);
+        this.logger.error(`API call error: ${err.stack || err.message}`, {err});
         return err;
       });
   }
